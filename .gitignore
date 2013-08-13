@@ -10,3 +10,7 @@
 /bin
 /lib
 /build
+/out
+*.ipr
+*.iml
+*.iws
