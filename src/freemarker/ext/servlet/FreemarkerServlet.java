@@ -61,10 +61,8 @@ import freemarker.ext.jsp.TaglibFactory;
 import freemarker.log.Logger;
 import freemarker.template.*;
 import freemarker.template.utility.StringUtil;
-import org.owasp.esapi.ESAPI;
 import org.owasp.esapi.Encoder;
 import org.owasp.esapi.reference.DefaultEncoder;
-import org.owasp.esapi.reference.Log4JLogFactory;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;

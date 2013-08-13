@@ -340,7 +340,7 @@ Version: $Id: build.xml,v 1.138.2.4 2006/12/27 16:11:23 szegedia Exp $
         <get src="${libs.location}/jsp-api-2.1.jar" dest="lib/jsp-api-2.1.jar" usetimestamp="true"/>
         <get src="${libs.location}/xalan.jar" dest="lib/xalan.jar" usetimestamp="true"/>
 		<get src="${oscore.location}/${oscore.version}/oscore-${oscore.version}.jar" dest="lib/oscore-${oscore.version}.jar" usetimestamp="true"/>
-        <get src="${maven.location}/org/owasp/esapi/esapi/${esapi.version}/esapi-${esapi.version}.jar" dest="lib/easpi-${esapi.version}.jar" usetimestamp="true"/>
+        <get src="${maven.location}/org/owasp/esapi/esapi/${esapi.version}/esapi-${esapi.version}.jar" dest="lib/esapi-${esapi.version}.jar" usetimestamp="true"/>
     </target>
 
     <target name="init">
@@ -376,7 +376,7 @@ Version: $Id: build.xml,v 1.138.2.4 2006/12/27 16:11:23 szegedia Exp $
                 <available file="lib/jsp-api-2.1.jar"/>
                 <available file="lib/xalan.jar"/>
 				<available file="lib/oscore-${oscore.version}.jar"/>
-                <available file="lib/easpi-${esapi.version}.jar"/>
+                <available file="lib/esapi-${esapi.version}.jar"/>
             </and>
         </condition>
         <antcall target="fetchlibs"/>
