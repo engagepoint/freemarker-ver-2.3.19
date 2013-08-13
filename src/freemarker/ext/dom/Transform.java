@@ -71,22 +71,7 @@ public class Transform {
     private String encoding;
     private Locale locale;
     private Configuration cfg; 
-    
-    /**
-     * A convenient main() method for command-line invocation.
-     */
-    static public void main(String[] args) {
-        try {
-            Transform proc = transformFromArgs(args);
-            proc.transform();
-        } catch (IllegalArgumentException iae) {
-            System.err.println(iae.getMessage());
-            usage();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-    
+
     /**
      * @param inputFile The file from which to read the XML input
      * @param ftlFile  The file containing the template
@@ -220,14 +205,6 @@ public class Transform {
             return new Locale(lang, country, variant);
         } else {
             return Locale.getDefault();
-        }
-    }
-    
-    static void usage() {
-        System.err.println("Usage: java freemarker.ext.dom.Transform -in <xmlfile> -ftl <ftlfile> [-out <outfile>] [-locale <locale>] [-encoding <encoding>]");
-        // Security: prevents shutting down the container from a template:
-        if (Environment.getCurrentEnvironment() == null) {
-            System.exit(-1);
         }
     }
 }
