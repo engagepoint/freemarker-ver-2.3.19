@@ -163,6 +163,11 @@ public class FileTemplateLoader implements TemplateLoader
                 public Object run() throws IOException {
                     File source = new File(baseDir, SEP_IS_SLASH ? name : 
                         name.replace('/', File.separatorChar));
+                    
+                    if(!isParent(baseDir, source) ) { 
+                        throw new SecurityException("File " + name + " is not in base directiry");
+                    }
+                    
                     if(!source.isFile()) {
                         return null;
                     }
@@ -179,6 +184,23 @@ public class FileTemplateLoader implements TemplateLoader
                     }
                     return source;
                 }
+                
+                private boolean isParent(File parent, File file) {
+                    File f;
+                    try {
+                        parent = parent.getCanonicalFile();
+                        f = file.getCanonicalFile();
+                    } catch (IOException e) {
+                        return false;
+                    }
+                    while (f != null) {
+                        if (parent.equals(f)) {
+                            return true;
+                        }
+                        f = f.getParentFile();
+                    }
+                    return false;
+                }               
             });
         }
         catch(PrivilegedActionException e)
