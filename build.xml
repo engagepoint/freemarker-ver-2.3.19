@@ -19,8 +19,9 @@ Version: $Id: build.xml,v 1.138.2.4 2006/12/27 16:11:23 szegedia Exp $
 
     <property name="libs.location" value="http://freemarker.sourceforge.net/jarsforbuild"/>
     <property name="repositoryRootDir" value="../../../"/>
-	
+
 	<property name="oscore.location" value="http://mirrors.ibiblio.org/pub/mirrors/maven2/opensymphony/oscore"/>
+    <property name="maven.location" value="http://repo1.maven.org/maven2"/>
 
     <property file="src/freemarker/version.properties" />
     <property name="src.dir" value="src"/>
@@ -60,7 +61,9 @@ Version: $Id: build.xml,v 1.138.2.4 2006/12/27 16:11:23 szegedia Exp $
     <property name="lib.jsp12" location="lib/jsp-api-1.2.jar"/>
     <property name="lib.jsp20" location="lib/jsp-api-2.0.jar"/>
     <property name="lib.jsp21" location="lib/jsp-api-2.1.jar"/>
-    
+    <property name="esapi.version" value="2.0_rc10"/>
+    <property name="org.owasp.esapi" location="lib/esapi-${esapi.version}.jar"/>
+
     <property name="lib.jython20" location="lib/jython-2.0.jar"/>
     <property name="lib.jython22" location="lib/jython-2.2.1.jar"/>
     <property name="lib.jython25" location="lib/jython-2.5.jar"/>
@@ -87,6 +90,7 @@ Version: $Id: build.xml,v 1.138.2.4 2006/12/27 16:11:23 szegedia Exp $
         <pathelement path="${lib.javarebel-sdk}"/>
         <pathelement path="${java.class.path}"/>
 		<pathelement path="${com.opensymphony.oscore}"/>
+        <pathelement path="${org.owasp.esapi}"/>
     </path>
     
     <path id="compile.classpath">
@@ -125,6 +129,8 @@ Version: $Id: build.xml,v 1.138.2.4 2006/12/27 16:11:23 szegedia Exp $
         <pathelement path="${lib.jdom}"/>
         <pathelement path="${lib.servlet}"/>
         <pathelement path="${lib.jsp20}"/>
+        <pathelement path="${org.owasp.esapi}"/>
+        <pathelement path="${src.dir}/ESAPI.properties"/>
     </path>
 
     <path id="compile.classpath.javadoc">
@@ -334,6 +340,7 @@ Version: $Id: build.xml,v 1.138.2.4 2006/12/27 16:11:23 szegedia Exp $
         <get src="${libs.location}/jsp-api-2.1.jar" dest="lib/jsp-api-2.1.jar" usetimestamp="true"/>
         <get src="${libs.location}/xalan.jar" dest="lib/xalan.jar" usetimestamp="true"/>
 		<get src="${oscore.location}/${oscore.version}/oscore-${oscore.version}.jar" dest="lib/oscore-${oscore.version}.jar" usetimestamp="true"/>
+        <get src="${maven.location}/org/owasp/esapi/esapi/${esapi.version}/esapi-${esapi.version}.jar" dest="lib/easpi-${esapi.version}.jar" usetimestamp="true"/>
     </target>
 
     <target name="init">
@@ -369,6 +376,7 @@ Version: $Id: build.xml,v 1.138.2.4 2006/12/27 16:11:23 szegedia Exp $
                 <available file="lib/jsp-api-2.1.jar"/>
                 <available file="lib/xalan.jar"/>
 				<available file="lib/oscore-${oscore.version}.jar"/>
+                <available file="lib/easpi-${esapi.version}.jar"/>
             </and>
         </condition>
         <antcall target="fetchlibs"/>
@@ -780,6 +788,7 @@ Version: $Id: build.xml,v 1.138.2.4 2006/12/27 16:11:23 szegedia Exp $
                 <attribute name="Implementation-Version" value="${versionForMf}" />
                 <attribute name="Implementation-Vendor" value="Visigoth Software Society" />
             </manifest>
+            <fileset file="${src.dir}/ESAPI.properties"/>
        </jar>
     </target>
 

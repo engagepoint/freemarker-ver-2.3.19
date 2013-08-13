@@ -52,20 +52,6 @@
 
 package freemarker.ext.servlet;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Enumeration;
-import java.util.GregorianCalendar;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
 import freemarker.cache.ClassTemplateLoader;
 import freemarker.cache.FileTemplateLoader;
 import freemarker.cache.TemplateLoader;
@@ -73,14 +59,26 @@ import freemarker.cache.WebappTemplateLoader;
 import freemarker.core.Configurable;
 import freemarker.ext.jsp.TaglibFactory;
 import freemarker.log.Logger;
-import freemarker.template.Configuration;
-import freemarker.template.ObjectWrapper;
-import freemarker.template.Template;
-import freemarker.template.TemplateException;
-import freemarker.template.TemplateExceptionHandler;
-import freemarker.template.TemplateModel;
-import freemarker.template.TemplateModelException;
+import freemarker.template.*;
 import freemarker.template.utility.StringUtil;
+import org.owasp.esapi.ESAPI;
+import org.owasp.esapi.Encoder;
+import org.owasp.esapi.reference.DefaultEncoder;
+import org.owasp.esapi.reference.Log4JLogFactory;
+
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Enumeration;
+import java.util.GregorianCalendar;
 import java.util.Locale;
 
 /**
@@ -175,7 +173,7 @@ import java.util.Locale;
 public class FreemarkerServlet extends HttpServlet
 {
     private static final Logger logger = Logger.getLogger("freemarker.servlet");
-    
+    private static Encoder encoder;
     public static final long serialVersionUID = -2440216393145762479L;
 
     private static final String INITPARAM_TEMPLATE_PATH = "TemplatePath";
@@ -228,6 +226,7 @@ public class FreemarkerServlet extends HttpServlet
                 "EEE, dd MMM yyyy HH:mm:ss z",
                 java.util.Locale.US);
         EXPIRATION_DATE = httpDate.format(expiration.getTime());
+        encoder = DefaultEncoder.getInstance();
     }
 
     private String templatePath;
@@ -412,7 +411,7 @@ public class FreemarkerServlet extends HttpServlet
         String path = requestUrlToTemplatePath(request);
 
         if (debug) {
-            log("Requested template: " + StringUtil.jQuoteNoXSS(path));
+            log("Requested template: " + encoder.encodeForHTML(path));
         }
 
         Template template = null;
@@ -489,6 +488,11 @@ public class FreemarkerServlet extends HttpServlet
     protected Locale deduceLocale(
             String templatePath, HttpServletRequest request, HttpServletResponse response) {
         return config.getLocale();
+    }
+
+    private String escapeString(String string) {
+        if (encoder == null) return string;
+        return encoder.encodeForJavaScript(encoder.encodeForHTMLAttribute(encoder.encodeForHTML(encoder.encodeForDN(encoder.encodeForCSS(string)))));
     }
 
     protected TemplateModel createModel(ObjectWrapper wrapper,
