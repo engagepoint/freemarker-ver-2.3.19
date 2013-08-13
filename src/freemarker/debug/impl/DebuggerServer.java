@@ -68,6 +68,7 @@ import freemarker.debug.Debugger;
 import freemarker.log.Logger;
 import freemarker.template.utility.SecurityUtilities;
 import freemarker.template.utility.UndeclaredThrowableException;
+import com.opensymphony.module.random.Yarrow;
 
 /**
  * @author Attila Szegedi
@@ -76,8 +77,8 @@ import freemarker.template.utility.UndeclaredThrowableException;
 class DebuggerServer
 {
     private static final Logger logger = Logger.getLogger("freemarker.debug.server");
-    // TODO: Eventually replace with Yarrow    
-    private static final Random R = new SecureRandom();
+      
+    private static final Random R = new Yarrow();
     
     private final byte[] password;
     private final int port;
