@@ -64,6 +64,15 @@ import java.security.PrivilegedActionException;
 import java.security.PrivilegedExceptionAction;
 
 import freemarker.template.utility.SecurityUtilities;
+import java.util.ArrayList;
+import java.util.List;
+import org.apache.tools.ant.util.StringUtils;
+import org.owasp.esapi.ESAPI;
+import static org.owasp.esapi.ESAPI.encoder;
+import org.owasp.esapi.Encoder;
+import org.owasp.esapi.Validator;
+import org.owasp.esapi.reference.DefaultEncoder;
+import org.owasp.esapi.reference.DefaultValidator;
 
 /**
  * A {@link TemplateLoader} that uses files in a specified directory as the
@@ -161,12 +170,12 @@ public class FileTemplateLoader implements TemplateLoader
         try {
             return AccessController.doPrivileged(new PrivilegedExceptionAction() {
                 public Object run() throws IOException {
+                    if(!isValidFileName(name)) { 
+                        throw new SecurityException("File name is not valid");
+                    }
+                    
                     File source = new File(baseDir, SEP_IS_SLASH ? name : 
                         name.replace('/', File.separatorChar));
-                    
-                    if(!isParent(baseDir, source) ) { 
-                        throw new SecurityException("File " + name + " is not in base directiry");
-                    }
                     
                     if(!source.isFile()) {
                         return null;
@@ -185,22 +194,16 @@ public class FileTemplateLoader implements TemplateLoader
                     return source;
                 }
                 
-                private boolean isParent(File parent, File file) {
-                    File f;
-                    try {
-                        parent = parent.getCanonicalFile();
-                        f = file.getCanonicalFile();
-                    } catch (IOException e) {
-                        return false;
-                    }
-                    while (f != null) {
-                        if (parent.equals(f)) {
-                            return true;
-                        }
-                        f = f.getParentFile();
-                    }
-                    return false;
-                }               
+                private boolean isValidFileName(String name) {
+                    List list = new ArrayList();
+                    list.add("HTMLEntityCodec");
+                    Encoder encoder = new DefaultEncoder(list);
+                    DefaultValidator instance = new DefaultValidator(encoder);
+                    List<String> extentions = new ArrayList(ESAPI.securityConfiguration().getAllowedFileExtensions());
+                    extentions.add("ftl");
+                    extentions.add("fm");
+                    return instance.isValidFileName("FileTemplateLoader", name, extentions, false);
+                }
             });
         }
         catch(PrivilegedActionException e)
