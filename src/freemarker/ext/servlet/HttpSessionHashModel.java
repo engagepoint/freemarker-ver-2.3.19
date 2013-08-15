@@ -131,11 +131,15 @@ public final class HttpSessionHashModel implements TemplateHashModel, Serializab
                             this, session);
                 }
                 catch(RuntimeException e) {
+                    session.invalidate();
                     throw e;
                 }
                 catch(Exception e) {
+                    session.invalidate();
                     throw new TemplateModelException(e);
                 }
+            }  else if(session != null) {
+                session.invalidate();
             }
         }
     }
