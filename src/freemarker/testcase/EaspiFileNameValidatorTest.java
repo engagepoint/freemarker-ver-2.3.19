@@ -1,5 +1,6 @@
 package freemarker.testcase;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import junit.framework.TestCase;
@@ -13,6 +14,8 @@ import org.owasp.esapi.reference.DefaultValidator;
  * User: leonid.marushevskiy
  */
 public class EaspiFileNameValidatorTest extends TestCase {
+    
+    private static final boolean SEP_IS_SLASH = File.separatorChar == '/';
 
     public EaspiFileNameValidatorTest(String name) {
         super(name);
@@ -25,10 +28,13 @@ public class EaspiFileNameValidatorTest extends TestCase {
         assertTrue(isValidFileName("test.fm"));       
         
         assertTrue(!isValidFileName("test.slkf;lsdkf;"));      
-        assertTrue(isValidFileName("test"));      
+        assertTrue(isValidFileName("test"));   
+        assertTrue(isValidFileName("src/test/resources/helloworld.ftl"));   
     }
     
     private static boolean isValidFileName(String name) {
+        name = name.substring(name.lastIndexOf("/")+1);
+        name = name.substring(name.lastIndexOf("\\")+1);
         List list = new ArrayList();
         list.add("HTMLEntityCodec");
         Encoder encoder = new DefaultEncoder(list);
@@ -37,8 +43,6 @@ public class EaspiFileNameValidatorTest extends TestCase {
         extentions.add("ftl");
         extentions.add("fm");
         extentions.add("");
-        instance.isValidFileName("FileTemplateLoader", "doc/text.txt", extentions, false);
-
         return instance.isValidFileName("FileTemplateLoader", name, extentions, false);
     }
 }

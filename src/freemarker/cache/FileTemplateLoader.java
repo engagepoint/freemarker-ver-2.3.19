@@ -193,6 +193,8 @@ public class FileTemplateLoader implements TemplateLoader
                 }
                 
                 private boolean isValidFileName(String name) {
+                    name = name.substring(name.lastIndexOf("/") + 1);
+                    name = name.substring(name.lastIndexOf("\\") + 1);
                     List list = new ArrayList();
                     list.add("HTMLEntityCodec");
                     Encoder encoder = new DefaultEncoder(list);
@@ -200,8 +202,7 @@ public class FileTemplateLoader implements TemplateLoader
                     List extentions = new ArrayList(ESAPI.securityConfiguration().getAllowedFileExtensions());
                     extentions.add("ftl");
                     extentions.add("fm");
-                    instance.isValidFileName("FileTemplateLoader", "doc/text.txt", extentions, false);
-                    
+                    extentions.add("");
                     return instance.isValidFileName("FileTemplateLoader", name, extentions, false);
                 }
             });
