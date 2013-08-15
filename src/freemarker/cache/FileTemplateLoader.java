@@ -66,11 +66,8 @@ import java.security.PrivilegedExceptionAction;
 import freemarker.template.utility.SecurityUtilities;
 import java.util.ArrayList;
 import java.util.List;
-import org.apache.tools.ant.util.StringUtils;
 import org.owasp.esapi.ESAPI;
-import static org.owasp.esapi.ESAPI.encoder;
 import org.owasp.esapi.Encoder;
-import org.owasp.esapi.Validator;
 import org.owasp.esapi.reference.DefaultEncoder;
 import org.owasp.esapi.reference.DefaultValidator;
 
@@ -199,7 +196,7 @@ public class FileTemplateLoader implements TemplateLoader
                     list.add("HTMLEntityCodec");
                     Encoder encoder = new DefaultEncoder(list);
                     DefaultValidator instance = new DefaultValidator(encoder);
-                    List<String> extentions = new ArrayList(ESAPI.securityConfiguration().getAllowedFileExtensions());
+                    List extentions = new ArrayList(ESAPI.securityConfiguration().getAllowedFileExtensions());
                     extentions.add("ftl");
                     extentions.add("fm");
                     return instance.isValidFileName("FileTemplateLoader", name, extentions, false);
