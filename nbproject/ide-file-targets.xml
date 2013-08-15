@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir=".." name="freemarker-IDE">
+    <!-- TODO: edit the following target according to your needs -->
+    <!-- (more info: http://www.netbeans.org/kb/articles/freeform-config.html#runsingle) -->
+    <target name="debug-selected-file-in-src">
+        <fail unless="debug.class">Must set property 'debug.class'</fail>
+        <path id="cp">
+            <pathelement path="lib;lib/ant.jar;lib/commons-logging.jar;lib/dom4j.jar;lib/emma.jar;lib/emma_ant.jar;lib/freemarker-bootstrap.jar;lib/freemarker.jar;lib/javacc.jar;lib/javarebel-sdk.jar;lib/jaxen.jar;lib/jdom.jar;lib/js.jar;lib/jsp-api-1.2.jar;lib/jsp-api-2.0.jar;lib/jsp-api-2.1.jar;lib/junit.jar;lib/jython-2.0.jar;lib/jython-2.2.1.jar;lib/jython-2.5.jar;lib/log4j.jar;lib/logkit.jar;lib/oscore-2.2.4.jar;lib/rt122.jar;lib/saxpath.jar;lib/servlet.jar;lib/slf4j-api.jar;lib/slf4j-jdk14.jar;lib/struts.jar;lib/xalan.jar;lib/xml-apis.jar;lib/esapi-2.0_rc10.jar"/>
+            <pathelement location="lib"/>
+        </path>
+        <nbjpdastart addressproperty="jpda.address" name="freemarker" transport="dt_socket">
+            <classpath refid="cp"/>
+        </nbjpdastart>
+        <java classname="${debug.class}" fork="true">
+            <classpath refid="cp"/>
+            <jvmarg value="-Xdebug"/>
+            <jvmarg value="-Xrunjdwp:transport=dt_socket,address=${jpda.address}"/>
+        </java>
+    </target>
+    <!-- TODO: edit the following target according to your needs -->
+    <!-- (more info: http://www.netbeans.org/kb/articles/freeform-config.html#runsingle) -->
+    <target name="run-selected-file-in-src">
+        <fail unless="run.class">Must set property 'run.class'</fail>
+        <java classname="${run.class}" failonerror="true" fork="true">
+            <classpath>
+                <pathelement path="lib;lib/ant.jar;lib/commons-logging.jar;lib/dom4j.jar;lib/emma.jar;lib/emma_ant.jar;lib/freemarker-bootstrap.jar;lib/freemarker.jar;lib/javacc.jar;lib/javarebel-sdk.jar;lib/jaxen.jar;lib/jdom.jar;lib/js.jar;lib/jsp-api-1.2.jar;lib/jsp-api-2.0.jar;lib/jsp-api-2.1.jar;lib/junit.jar;lib/jython-2.0.jar;lib/jython-2.2.1.jar;lib/jython-2.5.jar;lib/log4j.jar;lib/logkit.jar;lib/oscore-2.2.4.jar;lib/rt122.jar;lib/saxpath.jar;lib/servlet.jar;lib/slf4j-api.jar;lib/slf4j-jdk14.jar;lib/struts.jar;lib/xalan.jar;lib/xml-apis.jar;lib/esapi-2.0_rc10.jar"/>
+                <pathelement location="lib"/>
+            </classpath>
+        </java>
+    </target>
+</project>
