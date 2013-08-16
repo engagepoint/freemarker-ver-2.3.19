@@ -1,5 +1,6 @@
 package freemarker.testcase;
 
+import freemarker.template.utility.StringUtil;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +33,15 @@ public class EaspiFileNameValidatorTest extends TestCase {
         assertTrue(isValidFileName("src/test/resources/helloworld.ftl"));   
     }
     
-    private static boolean isValidFileName(String name) {
+    public void testRecursiveSubstringDeletion(){
+        assertEquals("/etc/test/test.ftl", replaceSubstringRecursively("/etc/.../...//test/test.ftl", "../"));
+    }
+    
+    public void testIsValidFilePath(){
+        assertTrue(isNotValidFilePath("src/resources/test.ftl"));
+    }
+    
+    private boolean isValidFileName(String name) {
         name = name.substring(name.lastIndexOf("/")+1);
         name = name.substring(name.lastIndexOf("\\")+1);
         List list = new ArrayList();
@@ -45,4 +54,31 @@ public class EaspiFileNameValidatorTest extends TestCase {
         extentions.add("");
         return instance.isValidFileName("FileTemplateLoader", name, extentions, false);
     }
+
+    private String replaceSubstringRecursively(String name, String substring) {
+        if (name == null) {
+            return name;
+        }
+        if (name.indexOf(substring) >= 0) {
+            name = StringUtil.replace(name, substring, "", true, false);
+            return replaceSubstringRecursively(name, substring);
+        }
+        return name;
+    }
+
+    private boolean isNotValidFilePath(String sanitizedName) {
+        if (sanitizedName == null || sanitizedName.isEmpty()) {
+            return false;
+        }
+
+        if (sanitizedName.length() > 255) {
+            return false;
+        }
+        String fileName = sanitizedName.substring(sanitizedName.lastIndexOf(File.separatorChar) + 1);
+        String filePath = sanitizedName.substring(0, sanitizedName.lastIndexOf(File.separatorChar) + 1);
+
+        return true;
+    }
+    
+    
 }

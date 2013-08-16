@@ -64,6 +64,7 @@ import java.security.PrivilegedActionException;
 import java.security.PrivilegedExceptionAction;
 
 import freemarker.template.utility.SecurityUtilities;
+import freemarker.template.utility.StringUtil;
 import java.util.ArrayList;
 import java.util.List;
 import org.owasp.esapi.ESAPI;
@@ -160,50 +161,15 @@ public class FileTemplateLoader implements TemplateLoader
             throw (IOException)e.getException();
         }
     }
-    
+                        
     public Object findTemplateSource(final String name)
     throws
     	IOException
     {
         try {
             return AccessController.doPrivileged(new PrivilegedExceptionAction() {
-                public Object run() throws IOException {
-                    if(!isValidFileName(name)) { 
-                        throw new SecurityException("File name is not valid");
-                    }
-                    
-                    File source = new File(baseDir, SEP_IS_SLASH ? name : 
-                        name.replace('/', File.separatorChar));
-                    
-                    if(!source.isFile()) {
-                        return null;
-                    }
-                    // Security check for inadvertently returning something 
-                    // outside the template directory when linking is not 
-                    // allowed.
-                    if(canonicalPath != null) {
-                        String normalized = source.getCanonicalPath();
-                        if (!normalized.startsWith(canonicalPath)) {
-                            throw new SecurityException(source.getAbsolutePath() 
-                                    + " resolves to " + normalized + " which " + 
-                                    " doesn't start with " + canonicalPath);
-                        }
-                    }
-                    return source;
-                }
-                
-                private boolean isValidFileName(String name) {
-                    name = name.substring(name.lastIndexOf("/") + 1);
-                    name = name.substring(name.lastIndexOf("\\") + 1);
-                    List list = new ArrayList();
-                    list.add("HTMLEntityCodec");
-                    Encoder encoder = new DefaultEncoder(list);
-                    Validator instance = new DefaultValidator(encoder);
-                    List extentions = new ArrayList(ESAPI.securityConfiguration().getAllowedFileExtensions());
-                    extentions.add("ftl");
-                    extentions.add("fm");
-                    extentions.add("");
-                    return instance.isValidFileName("FileTemplateLoader", name, extentions, false);
+                public Object run() throws IOException {                    
+                    return null;
                 }
             });
         }
