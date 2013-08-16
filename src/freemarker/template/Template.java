@@ -156,11 +156,9 @@ public class Template extends Configurable {
     {
         this(name, cfg);
         this.encoding = encoding;
-
-        if (!(reader instanceof BufferedReader)) {
-            reader = new BufferedReader(reader, 0x1000);
-        }
-        LineTableBuilder ltb = new LineTableBuilder(reader);
+        
+        BufferedReader bufferedReader = buffered(reader);
+        LineTableBuilder ltb = new LineTableBuilder(bufferedReader);
         try {
             try {
                 FMParser parser = new FMParser(this, ltb,
@@ -179,6 +177,7 @@ public class Template extends Configurable {
             throw e;
         }
         finally {
+            bufferedReader.close();
             ltb.close();
         }
         DebuggerService.registerTemplate(this);
@@ -706,6 +705,23 @@ mainloop:
             this.specifiedEncoding = specifiedEncoding;
         }
 
+    }
+    
+    /**
+     * Wraps the passed <code>reader</code> into a {@link BufferedReader} object
+     * and returns that. If the passed <code>reader</code> is already an
+     * instance of {@link BufferedReader} returns the same passed
+     * <code>reader</code> reference as is (avoiding double wrapping).
+     * 
+     * @param reader the wrapee to be used for the buffering support
+     * @return the passed <code>reader</code> decorated through a
+     *         {@link BufferedReader} object as wrapper
+     */
+    private static BufferedReader buffered(Reader reader) {
+        if (!(reader instanceof BufferedReader)) {
+            reader = new BufferedReader(reader, 0x1000);
+        }
+        return (BufferedReader) reader;
     }
 }
 
