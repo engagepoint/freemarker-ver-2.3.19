@@ -177,8 +177,10 @@ final class ComparisonExpression extends BooleanExpression {
             String first = left.getStringValue(env);
             String second = right.getStringValue(env);
             comp = env.getCollator().compare(first, second);
-        }
-        else {
+        } else if(ltm instanceof IPlaceholderCaptureModel || rtm instanceof IPlaceholderCaptureModel) {
+            // if we found our custom model interface
+            return true;
+        } else {
             throw new TemplateException(
                 "The only legal comparisons are between two numbers, two strings, or two dates.\n"
                 + "Left  hand operand is a " + ltm.getClass().getName() + "\n"

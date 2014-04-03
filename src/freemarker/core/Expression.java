@@ -97,15 +97,17 @@ abstract public class Expression extends TemplateObject {
     throws
         TemplateException
     {
+        //Move TemplateScalarModel to top cause IPlaceholderCaptureModel extends all model interfaces
+        //This need to extract placeholders(FreeMarkerUtil) in common cause as String
+        if (referentModel instanceof TemplateScalarModel) {
+            return EvaluationUtil.getString((TemplateScalarModel) referentModel, exp, env);
+        }
         if (referentModel instanceof TemplateNumberModel) {
             return env.formatNumber(EvaluationUtil.getNumber((TemplateNumberModel) referentModel, exp, env));
         }
         if (referentModel instanceof TemplateDateModel) {
             TemplateDateModel dm = (TemplateDateModel) referentModel;
             return env.formatDate(EvaluationUtil.getDate(dm, exp, env), dm.getDateType());
-        }
-        if (referentModel instanceof TemplateScalarModel) {
-            return EvaluationUtil.getString((TemplateScalarModel) referentModel, exp, env);
         }
         if(env.isClassicCompatible()) {
             if (referentModel instanceof TemplateBooleanModel) {
