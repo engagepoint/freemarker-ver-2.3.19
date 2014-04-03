@@ -303,7 +303,19 @@ abstract class BuiltIn extends Expression implements Cloneable {
         TemplateModel _getAsTemplateModel(Environment env)
                 throws TemplateException
         {
+            // -------------
+            // Code below is for optional/required placeholders support
+            // -------------
+            // intercept buitIn and MethodCall functions to pass unmodified
+            // PlaceholderCaptureModel to DefaultToExpression class for ability
+            // to get optional marker.
             TemplateModel model = target.getAsTemplateModel(env);
+            if(model instanceof IPlaceholderCaptureModel) {
+                IPlaceholderCaptureModel modelPL = (IPlaceholderCaptureModel)model;
+                modelPL.getAsDate();
+                return model;
+            }
+
             if (model instanceof TemplateDateModel) {
                 TemplateDateModel dmodel = (TemplateDateModel)model;
                 int dtype = dmodel.getDateType();
@@ -406,6 +418,17 @@ abstract class BuiltIn extends Expression implements Cloneable {
                 throws TemplateException
         {
             TemplateModel model = target.getAsTemplateModel(env);
+
+            // -------------
+            // Code below is for optional/required placeholders support
+            // -------------
+            // throw custom exception woth PlaceholderCaptureModel in order
+            // to skip complex functions processing
+            if(model instanceof IPlaceholderCaptureModel) {
+                EvaluationUtil.getNumber((TemplateNumberModel)model, target, env);
+                throw new PHModelException(env, model);
+            }
+
             if (model instanceof TemplateNumberModel) {
                 return new NumberFormatter(EvaluationUtil.getNumber((TemplateNumberModel)model, target, env), env);
             }

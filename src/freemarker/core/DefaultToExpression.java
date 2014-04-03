@@ -99,10 +99,25 @@ class DefaultToExpression extends Expression {
 		try {
 			left = lhs.getAsTemplateModel(env);
 		} catch (InvalidReferenceException ire) {
-			if (!(lhs instanceof ParentheticalExpression)) {
+            // -------------
+            // Code below is for optional/required placeholders support
+            // -------------
+            // in this class optionality marker is obtaining
+            // catch custom exception and obtain PlaceholderCaptureModel from
+            // exception in order to get optionality marker
+            if (ire instanceof PHModelException) {
+                ((PHModelException)ire).getModel().getExpression(this);
+            }
+            if (!(lhs instanceof ParentheticalExpression)) {
 				throw ire;
 			}
 		}
+        // if not catched, calling PlaceholderCaptureModel.getExpression(..)
+        // method to get
+        // optional marker from FreeMarker variable.
+        if(left instanceof IPlaceholderCaptureModel) {
+            ((IPlaceholderCaptureModel)left).getExpression(this);
+        }
 		if (left != null) return left;
 		if (rhs == null) return EMPTY_STRING_AND_SEQUENCE;
 		return rhs.getAsTemplateModel(env);

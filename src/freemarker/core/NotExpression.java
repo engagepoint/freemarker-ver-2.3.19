@@ -53,6 +53,7 @@
 package freemarker.core;
 
 import freemarker.template.TemplateException;
+import freemarker.template.TemplateModel;
 
 final class NotExpression extends BooleanExpression {
 
@@ -63,6 +64,11 @@ final class NotExpression extends BooleanExpression {
     }
 
     boolean isTrue(Environment env) throws TemplateException {
+        TemplateModel model = target.getAsTemplateModel(env);
+        if(model instanceof IPlaceholderCaptureModel) {
+            target.isTrue(env);
+            return true;
+        }
         return (!target.isTrue(env));
     }
 

@@ -794,6 +794,7 @@ Version: $Id: build.xml,v 1.138.2.4 2006/12/27 16:11:23 szegedia Exp $
             </manifest>
             <fileset file="${src.dir}/ESAPI.properties"/>
             <fileset file="${src.dir}/validation.properties"/>
+            <fileset dir="${src.dir}" includes="**/*.java"/>
        </jar>
     </target>
 

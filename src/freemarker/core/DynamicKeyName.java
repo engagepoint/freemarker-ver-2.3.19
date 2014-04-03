@@ -102,6 +102,9 @@ final class DynamicKeyName extends Expression {
                                                Environment env)
         throws TemplateException
     {
+        if(targetModel instanceof IPlaceholderCaptureModel) {
+            return ((IPlaceholderCaptureModel) targetModel).get(index);
+        }
         if (targetModel instanceof TemplateSequenceModel) {
             TemplateSequenceModel tsm = (TemplateSequenceModel) targetModel;
             int size = Integer.MAX_VALUE;

@@ -53,6 +53,7 @@
 package freemarker.core;
 
 import freemarker.template.TemplateException;
+import freemarker.template.TemplateModel;
 
 final class OrExpression extends BooleanExpression {
 
@@ -65,6 +66,13 @@ final class OrExpression extends BooleanExpression {
     }
 
     boolean isTrue(Environment env) throws TemplateException {
+        TemplateModel modelL = left.getAsTemplateModel(env);
+        TemplateModel modelR = right.getAsTemplateModel(env);
+        if(modelL instanceof IPlaceholderCaptureModel || modelR instanceof IPlaceholderCaptureModel) {
+            left.isTrue(env);
+            right.isTrue(env);
+            return true;
+        }
         return left.isTrue(env) || right.isTrue(env);
     }
 

@@ -664,6 +664,13 @@ public final class Environment extends Configurable {
     private void handleTemplateException(TemplateException te)
         throws TemplateException
     {
+        // -------------
+        // Code below is for optional/required placeholders support
+        // -------------
+        //In case of getting custom PHModelException, just ignore it.
+        if (te instanceof PHModelException) {
+            return;
+        }
         // Logic to prevent double-handling of the exception in
         // nested visit() calls.
         if(lastThrowable == te) {

@@ -84,6 +84,15 @@ final class MethodCall extends Expression {
     TemplateModel _getAsTemplateModel(Environment env) throws TemplateException
     {
         TemplateModel targetModel = target.getAsTemplateModel(env);
+
+        // -------------
+        // Code below is for optional/required placeholders support
+        // -------------
+        //To return our custom model and skip all processing below when extract placeholders
+        if(targetModel instanceof IPlaceholderCaptureModel) {
+            return targetModel;
+        }
+
         if (targetModel instanceof TemplateMethodModel) {
             TemplateMethodModel targetMethod = (TemplateMethodModel)targetModel;
             List argumentStrings = 
